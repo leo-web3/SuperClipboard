@@ -284,5 +284,21 @@
       "src/main/*"
     ],
     "logLevel": "quiet"
+  },
+  "config": {
+    "forge": {
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "yes_web3",
+              "name": "superClipboard"
+            },
+            "draft": true
+          }
+        }
+      ]
+    }
   }
 }
