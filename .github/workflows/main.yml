@@ -28,7 +28,7 @@
         run: npm install
 
       - name: Build SuperClipboard App
-        run: npm run dist
+        run: npm run package
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
