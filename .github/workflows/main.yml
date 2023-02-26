@@ -28,7 +28,7 @@ jobs:
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.os }}
+          name: SuperClipboard
           path: release/build
 
       - name: release
@@ -61,7 +61,7 @@ jobs:
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.os }}
+          name: SuperClipboard
           path: release/build
 
       - name: release
