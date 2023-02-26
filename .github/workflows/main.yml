@@ -1,8 +1,8 @@
 name: SuperClipboard
-on:
-  push:
-    tags:
-      - 'v*'
+on: [push]
+#  push:
+#    tags:
+#      - 'v*'
 jobs:
 
   publish_on_linux:
