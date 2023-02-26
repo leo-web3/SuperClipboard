@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline'"
+    />
+    <title>Super Clipboard</title>
+  </head>
+  <body>
+    <style>
+      html[lang*="en"]{
+          font-family: Montserrat-Regular,Montserrat;
+      }
+      html[lang*="zh"]{
+          font-family: PingFangSC-Regular, PingFang SC, Montserrat-Regular,Montserrat;
+      }
+      * {
+          box-sizing: border-box;
+      }
+      i {
+          flex-shrink: 0;
+      }
+
+      html,
+      body {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          overflow-x: hidden;
+      }
+      button {
+          user-select: none;
+      }
+
+      html {
+          font-size: 16px;
+          font-variant: none;
+          font-smooth: always;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      #background-radial-gradient {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          pointer-events: none;
+          width: 200vw;
+          height: 200vh;
+          background: radial-gradient(50% 50% at 50% 50%, #fc077d10 0%, rgba(255, 255, 255, 0) 100%);
+          transform: translate(-50vw, -100vh);
+          z-index: -1;
+      }
+
+      html {
+          min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+          html {
+              /* background: #212429; */
+          }
+      }
+      @media (prefers-color-scheme: light) {
+          html {
+              /* background: #F7F8FA; */
+          }
+      }
+    </style>
+    <div id="root"></div>
+  </body>
+</html>
