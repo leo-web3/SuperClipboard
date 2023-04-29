@@ -5,7 +5,6 @@ on: [push]
 #      - 'v*'
 
 jobs:
-
   mac:
     runs-on: macos-latest
     steps:
@@ -35,7 +34,7 @@ jobs:
       - name: install dependencies
         run: npm install
       - name: publish
-        run: npm run package
+        run: npm run package-win
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
