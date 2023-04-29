@@ -8,14 +8,13 @@ jobs:
   mac:
     runs-on: macos-latest
     steps:
+      - name: Check out git repository
       - uses: actions/checkout@v3
       - name: Install Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: '18'
       - name: install dependencies
         run: npm install
-      - name: publish
+      - name: build macOS app
         run: npm run package
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -31,59 +30,31 @@ jobs:
           name: SuperClipboard-macos
           path: release/build/*.dmg
 
-jobs:
-  release:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest]
-    # create steps
+  win:
+    runs-on: windows-latest
     steps:
-      # step1: check out repository
       - name: Check out git repository
-        uses: actions/checkout@v3
-
-      # step2: install node env
+      - uses: actions/checkout@v3
       - name: Install Node.js
         uses: actions/setup-node@v3
-
-      # step3: npm install
-      - name: npm install
-        run: |
-          npm install
-
-      # step4: build app for mac/win
-      - name: build windows app
-        if: matrix.os == 'windows-latest'
-        run: |
-          npm run package-win
+      - name: install dependencies
+        run: npm install
+      - name: build window app
+        run: npm run package-win
         env:
-          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: build mac app
-        if: matrix.os == 'macos-latest'
-        run: |
-          npm run package
-        env:
-          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-      # step5: cleanup artifacts in build
-      - name: cleanup artifacts for windows
+      - name: Cleanup Artifacts for Windows
         if: matrix.os == 'windows-latest'
         run: |
           npx rimraf "release/build/!(*.exe)"
-      - name: cleanup artifacts for macosZ
-        if: matrix.os == 'macos-latest'
-        run: |
-          npx rimraf "release/build/!(*.dmg)"
 
-      # step6: upload artifacts
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.os }}
-          path: release/build
+          name: SuperClipboard-windows
+          path: release/build/*.exe
+
   # step7: create release
   - name: release
     uses: softprops/action-gh-release@v1
