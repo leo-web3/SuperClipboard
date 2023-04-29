@@ -10,8 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
-        with: node-version: '18'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
       - name: install dependencies
         run: npm install
       - name: publish
@@ -35,8 +36,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
-        with: node-version: '18'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
       - name: install dependencies
         run: npm install
       - name: publish
