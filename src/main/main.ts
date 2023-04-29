@@ -4,7 +4,9 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import Store from 'electron-store';
 
+const store = new Store();
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -16,14 +18,13 @@ class AppUpdater {
 let appTray = null;
 let mainWindow: BrowserWindow | null = null;
 
-if (process.env.NODE_ENV === 'production') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const sourceMapSupport = require('source-map-support');
-  sourceMapSupport.install();
-}
+// if (process.env.NODE_ENV === 'production') {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// const sourceMapSupport = require('source-map-support');
+// sourceMapSupport.install();
+// }
 
-const isDebug =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+const isDebug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -68,10 +69,8 @@ const createWindow = async () => {
     useContentSize: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
-      preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
-    },
+      preload: app.isPackaged ? path.join(__dirname, 'preload.js') : path.join(__dirname, '../../.erb/dll/preload.js')
+    }
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
@@ -112,41 +111,47 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
-const items:string[] = [];
+const items: string[] = {};
 ipcMain.on('ipc-messages', async (_event, [value, index]) => {
   items[index] = value;
 });
 ipcMain.on('ipc-start', async (_event, [onoff]) => {
   if (onoff) {
-    Array(10).fill(0).forEach((_, i) => {
-      const ret = globalShortcut.register(`CommandOrControl+${i}`, () => {
-        clipboard.writeText(items[i] || "")
-      })
-      if (!ret) {console.log('Shortcut registration failed')}
-      // console.log(globalShortcut.isRegistered(`CommandOrControl+${i}`))
-    })
+    Array(10)
+      .fill(0)
+      .forEach((_, i) => {
+        const ret = globalShortcut.register(`CommandOrControl+${i}`, () => {
+          clipboard.writeText(items[i] || '');
+        });
+        if (!ret) {
+          console.log('Shortcut registration failed');
+        }
+        // console.log(globalShortcut.isRegistered(`CommandOrControl+${i}`))
+      });
   } else {
-    Array(10).fill(0).forEach((_, i) => {
-      // console.log(`unregister CommandOrControl+${i}`)
-      globalShortcut.unregister(`CommandOrControl+${i}`)
-    })
+    Array(10)
+      .fill(0)
+      .forEach((_, i) => {
+        // console.log(`unregister CommandOrControl+${i}`)
+        globalShortcut.unregister(`CommandOrControl+${i}`);
+      });
   }
-})
-ipcMain.on("ipc-copy", async (_event, [index]) => {
-  clipboard.writeText(items[index] || "")
-})
+});
+ipcMain.on('ipc-copy', async (_event, [index]) => {
+  clipboard.writeText(items[index] || '');
+});
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
-    globalShortcut.unregisterAll()
+    globalShortcut.unregisterAll();
   }
 });
 
 app.on('will-quit', () => {
-  globalShortcut.unregisterAll()
-})
+  globalShortcut.unregisterAll();
+});
 app
   .whenReady()
   .then(() => {
@@ -158,5 +163,3 @@ app
     });
   })
   .catch(console.log);
-
-
