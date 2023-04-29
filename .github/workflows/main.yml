@@ -10,9 +10,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
       - name: install dependencies
         run: npm install
       - name: publish
@@ -28,24 +25,13 @@ jobs:
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: SuperClipboard
-          path: release/build
-
-      - name: release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: "release/build/**"
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          name: SuperClipboard-macos
+          path: release/build/*.dmg
 
   win:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
       - name: install dependencies
         run: npm install
       - name: publish
@@ -61,13 +47,5 @@ jobs:
       - name: upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: SuperClipboard
-          path: release/build
-
-      - name: release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: "release/build/**"
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          name: SuperClipboard-windows
+          path: release/build/*.exe
