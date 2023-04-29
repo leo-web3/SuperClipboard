@@ -1,16 +1,39 @@
-name: SuperClipboard
+name: SuperClipboard build and release electron app
 on:
   push:
     tags:
       - 'v*'
+
 jobs:
-  # job's id
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: install dependencies
+        run: npm install
+      - name: publish
+        run: npm run package
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Cleanup Artifacts for MacOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          npx rimraf "release/build/!(*.dmg)"
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: SuperClipboard-macos
+          path: release/build/*.dmg
+
+jobs:
   release:
-    # job's name
-    name: build and release electron app
-    # the type of machine to run the job on
     runs-on: ${{ matrix.os }}
-    # create a build matrix for jobs
     strategy:
       fail-fast: false
       matrix:
@@ -19,11 +42,11 @@ jobs:
     steps:
       # step1: check out repository
       - name: Check out git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # step2: install node env
       - name: Install Node.js
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v3
 
       # step3: npm install
       - name: npm install
@@ -57,7 +80,7 @@ jobs:
 
       # step6: upload artifacts
       - name: upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}
           path: release/build
