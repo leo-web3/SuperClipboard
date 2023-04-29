@@ -4,54 +4,68 @@ on:
     tags:
       - 'v*'
 jobs:
-  mac:
-    runs-on: macos-latest
+  # job's id
+  release:
+    # job's name
+    name: build and release electron app
+    # the type of machine to run the job on
+    runs-on: ${{ matrix.os }}
+    # create a build matrix for jobs
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    # create steps
     steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: install dependencies
-        run: npm install
-      - name: publish
-        run: npm run package
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      # step1: check out repository
+      - name: Check out git repository
+        uses: actions/checkout@v2
 
-      - name: Cleanup Artifacts for MacOS
+      # step2: install node env
+      - name: Install Node.js
+        uses: actions/setup-node@v2-beta
+
+      # step3: npm install
+      - name: npm install
+        run: |
+          npm install
+
+      # step4: build app for mac/win
+      - name: build windows app
+        if: matrix.os == 'windows-latest'
+        run: |
+          npm run package-win
+        env:
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: build mac app
+        if: matrix.os == 'macos-latest'
+        run: |
+          npm run package
+        env:
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      # step5: cleanup artifacts in build
+      - name: cleanup artifacts for windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          npx rimraf "release/build/!(*.exe)"
+      - name: cleanup artifacts for macosZ
         if: matrix.os == 'macos-latest'
         run: |
           npx rimraf "release/build/!(*.dmg)"
 
+      # step6: upload artifacts
       - name: upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
-          name: SuperClipboard-macos
-          path: release/build/*.dmg
-
-  win:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: install dependencies
-        run: npm install
-      - name: publish
-        run: npm run package
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Cleanup Artifacts for Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          npx rimraf "release/build/!(*.exe)"
-
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: SuperClipboard-windows
-          path: release/build/*.exe
+          name: ${{ matrix.os }}
+          path: release/build
+  # step7: create release
+  - name: release
+    uses: softprops/action-gh-release@v1
+    if: startsWith(github.ref, 'refs/tags/')
+    with:
+      files: "release/build/**"
+    env:
+      GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
