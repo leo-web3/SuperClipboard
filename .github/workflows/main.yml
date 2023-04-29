@@ -1,7 +1,8 @@
 name: SuperClipboard
-push:
-  tags:
-    - 'v*'
+on:
+  push:
+    tags:
+      - 'v*'
 jobs:
   mac:
     runs-on: macos-latest
