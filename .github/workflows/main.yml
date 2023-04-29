@@ -40,7 +40,7 @@ jobs:
       - name: install dependencies
         run: npm install
       - name: publish
-        run: npm run package-win
+        run: npm run package
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
