@@ -1,6 +1,6 @@
 {
   "description": "SuperClipboard",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "keywords": [
     "SuperClipboard",
     "clipboard"
@@ -123,7 +123,6 @@
     "electron-updater": "^5.0.3",
     "puppeteer": "18.2.1",
     "puppeteer-core": "18.2.1",
-    "quicklink": "^2.3.0",
     "react": "^18.2.0",
     "react-ace": "^10.1.0",
     "react-dom": "^18.2.0",
