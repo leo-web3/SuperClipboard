@@ -223,7 +223,6 @@
     ],
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
-      "icon": "icon.icns",
       "target": {
         "target": "default",
         "arch": [
@@ -253,7 +252,6 @@
       ]
     },
     "win": {
-      "icon": "icon.ico",
       "target": [
         "nsis"
       ]
