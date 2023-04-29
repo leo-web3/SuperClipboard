@@ -1,64 +1,59 @@
 name: SuperClipboard build and release electron app
-on:
-  push:
-    tags:
-      - 'v*'
-jobs:
-  mac:
-    runs-on: macos-latest
-    steps:
-      - name: Check out git repository
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-      - name: install dependencies
-        run: npm install
-      - name: build macOS app
-        run: npm run package
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Cleanup Artifacts for MacOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          npx rimraf "release/build/!(*.dmg)"
-
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: SuperClipboard-macos
-          path: release/build/*.dmg
-
-  win:
-    runs-on: windows-latest
-    steps:
-      - name: Check out git repository
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-      - name: install dependencies
-        run: npm install
-      - name: build window app
-        run: npm run package-win
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Cleanup Artifacts for Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          npx rimraf "release/build/!(*.exe)"
-
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: SuperClipboard-windows
-          path: release/build/*.exe
-
-  # step7: create release
-  - name: release
-    uses: softprops/action-gh-release@v1
-    if: startsWith(github.ref, 'refs/tags/')
-    with:
-      files: "release/build/**"
-    env:
-      GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+ on:
+   push:
+     tags:
+       - 'v*'
+ jobs:
+   mac:
+     runs-on: macos-latest
+     steps:
+       - name: Check out git repository
+         uses: actions/checkout@v3
+       - name: Install Node.js
+         uses: actions/setup-node@v3
+       - name: install dependencies
+         run: npm install
+       - name: build macOS app
+         run: npm run package
+         env:
+           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+       - name: Cleanup Artifacts for MacOS
+         run: |
+           npx rimraf "release/build/!(*.dmg)"
+       - name: upload artifacts
+         uses: actions/upload-artifact@v3
+         with:
+           name: SuperClipboard-macos
+           path: release/build/*.dmg
+   win:
+     runs-on: windows-latest
+     steps:
+       - name: Check out git repository
+         uses: actions/checkout@v3
+       - name: Install Node.js
+         uses: actions/setup-node@v3
+       - name: install dependencies
+         run: npm install
+       - name: build windows app
+         run: npm run package-win
+         env:
+           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+       - name: Cleanup Artifacts for Windows
+         run: |
+           npx rimraf "release/build/!(*.exe)"
+       - name: upload artifacts
+         uses: actions/upload-artifact@v3
+         with:
+           name: SuperClipboard-windows
+           path: release/build/*.exe
+   release:
+     needs: [mac, win]
+     runs-on: ubuntu-latest
+     steps:
+     - name: release
+       uses: softprops/action-gh-release@v1
+       if: startsWith(github.ref, 'refs/tags/')
+       with:
+         files: "release/build/**"
+       env:
+         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
