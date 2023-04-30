@@ -20,9 +20,13 @@ const Button = Styles.button`
   border-radius: 4px;
   padding: 6px 10px;
   cursor: pointer;
+  white-space: nowrap;
+  font-size: 12px;
   &.Stop {
     background:red;
   }
+`
+const OptionButton = Styles(Button)`
 `
 const Col = Styles.li`
   display: flex;
@@ -57,7 +61,7 @@ export default function App() {
           })
         }
       </Row>
-      <Button onClick={handleStart} className={[start ? "Stop": "Start"]}>{start ? "Stop": "Start"}</Button>
+      <OptionButton onClick={handleStart} className={[start ? "Stop": "Start"]}>{start ? "Stop": "Start"}</OptionButton>
     </main>
   );
 }

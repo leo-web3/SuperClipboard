@@ -1,12 +1,12 @@
 {
-  "name": "electron-react-boilerplate",
-  "version": "0.0.1",
+  "name": "SuperClipboard",
+  "version": "0.0.2",
   "description": "A foundation for scalable desktop apps",
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "lumao@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "SuperClipboard",
+    "email": "noshufu@gmail.com",
+    "url": "https://github.com/leo-web3/SuperClipboard"
   },
   "main": "./dist/main/main.js",
   "scripts": {
