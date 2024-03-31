@@ -6,6 +6,10 @@ const lists = Array(10)
   .map((_, i) => i + 1);
 const Row = Styles.ul`
 `;
+const Main = Styles.main`
+  padding:4px;
+
+`;
 const Input = Styles.input`
   height: 30px;
   border-radius: 4px;
@@ -13,6 +17,7 @@ const Input = Styles.input`
   margin-right: 4px;
   border: 1px solid rgba(0, 0, 0, .87);
   outline:none;
+  width: 100%;
 `;
 const Button = Styles.button`
   border:none;
@@ -50,7 +55,7 @@ export default function App() {
     window.electron.ipcRenderer.sendMessage('ipc-copy', [index]);
   };
   return (
-    <main>
+    <Main>
       <Row>
         {lists.map((item) => {
           if (item === 10) {
@@ -69,6 +74,6 @@ export default function App() {
       <OptionButton onClick={handleStart} className={[start ? 'Stop' : 'Start']}>
         {start ? 'Stop' : 'Start'}
       </OptionButton>
-    </main>
+    </Main>
   );
 }

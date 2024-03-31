@@ -6,6 +6,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import Store from 'electron-store';
 
+const height = 382;
+
 const store = new Store();
 class AppUpdater {
   constructor() {
@@ -57,15 +59,14 @@ const createWindow = async () => {
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
   };
-
   mainWindow = new BrowserWindow({
     show: false,
     width: 260,
-    height: 400,
+    height: height,
     minWidth: 260,
-    minHeight: 400,
+    minHeight: height,
     maxWidth: 260,
-    maxHeight: 400,
+    maxHeight: height,
     useContentSize: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
